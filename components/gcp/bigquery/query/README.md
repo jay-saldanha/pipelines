@@ -1,30 +1,107 @@
 
-# Bigquery - Query
+# Submitting a query using BigQuery <!-- this is a title-->
 
-## Intended Use
-A Kubeflow Pipeline component to submit a query to Google Cloud Bigquery service and dump outputs to a Google Cloud Storage blob. 
+## Labels
+GCP, BigQuery
 
-## Run-Time Parameters:
+## Summary
+
+<!--- why the user wants to use this
+- key technologies used -->
+
+## Details
+
+
+### Intended Use
+A Kubeflow Pipeline component to submit a query to the Google Cloud BigQuery service and dump the outputs to a Google Cloud Storage blob. 
+
+### Run-Time Parameters: <!--- input the missing details-->
+Argument | Description | Optional | Data type | Accepted values | Default |
+:--- | :---- | :--- | :---- | :--- | :---- | 
+query | The query used by the BigQuery service to fetch the results. | | | | |
+project_id | The project ID to execute the query.| | | | |
+dataset_id | The ID of the Persistent dataset to store the results of the query. If the dataset does not exist, this operation will create a new one.| | | | |
+table_id | The ID of the table to store the results of the query. If absent, the operation will generate a random id for the table.| | | | |
+output_gcs_path | The GCS blob path where the query results are dumped.| | | | |
+dataset_location | The location where the dataset is created. Defaults to `US`.| | | | |
+job_config | The full configurtion specifications for the query. See [QueryJobConfig](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.QueryJobConfig.html#google.cloud.bigquery.job.QueryJobConfig) for details. | | | | |
+
+### Input data schema
+<!--Description of the inputs (data, parameters, scripts, etc.) the pipeline ingests.
+* P0: High-level description of inputs
+* P1: Fields & definitions
+* P1: Sample data (text/images/etc.)
+* P1: Data formatting requirements. Size and other limitations.
+* P2: Link to sample datasets if available
+Make sure the customer is clear on what to provide.
+Is it one file or several? What format(s)?
+If the input is identified by a path to a location (like a local directory, or Cloud Storage bucket), what exactly should be in that location? A file with a particular name, format, etc.?
+If it is a script, what is the expected language?
+If input data is specified in runtime parameters, make sure the arguments mentioned here and in the runtime parameter table are identical.-->
+
+
+
+### Output:
+<!--Description of what a deployed pipeline generates.
+* P0: High-level description of output
+* P1: Fields & definitions
+* P1: Sample data
+* P1: Side-effects (e.g. data transformed along the way)
+What is the output, exactly? Trained models, model metrics, predictions, transformed data?
+Where can the customer find the output? If the output location is specified in runtime parameters, make sure the arguments mentioned here and in the runtime parameter table are identical.
+How many files will there be, and what formats will they be in?
+Anything else the customer should know about the expected file names, sizes, or other metadata?  -->
+
+
 Name | Description
 :--- | :----------
-query | The query used by Bigquery service to fetch the results.
-project_id | The project to execute the query job.
-dataset_id | The ID of the persistent dataset to keep the results of the query. If the dataset does not exist, the operation will create a new one.
-table_id | The ID of the table to keep the results of the query. If absent, the operation will generate a random id for the table.
-output_gcs_path | The GCS blob path to dump the query results to.
-dataset_location | The location to create the dataset. Defaults to `US`.
-job_config | The full config spec for the query job. See [QueryJobConfig](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.QueryJobConfig.html#google.cloud.bigquery.job.QueryJobConfig) for details.
+output_gcs_path | The GCS blob path where the query results are dumped. |
 
-## Output:
-Name | Description
-:--- | :----------
-output_gcs_path | The GCS blob path to dump the query results to.
+### Caution and requirements
+<!--P1: Data requirements (you need at least X samples…)
+* P1: Cluster requirements
+* P1: Resource access (external/3rd party services it needs access to)
+* P1: Other prerequisites (e.g. access tokens for 3rd party solutions)
+* P1: Known issues & limitations
+* P1: Ethical considerations
+* P2: Data assumptions/limitations (examples: implications of models being trained will be enriched with Google-proprietary data, face detection was trained on biased data)-->
 
-## Sample
+If there are any known issues identified, see if there’s any troubleshooting information that can be provided so the customer can resolve them.
+Does this asset use any services or APIs? Mention that dependency so users can properly configure their environment.
+
+### Performance and Metrics
+
+<!--Generated metrics and other indicators to evaluate the impact of deploying the pipeline
+* P2: Latency
+* P2: Accuracy
+* P2: Cost
+* P2: Benchmarks 
+If possible, describe the environment in which the above measurements were made so the customer can compare apples to apples. -->
+
+
+### Detailed Description
+
+<!--Description of the inner workings and the components of the pipeline (especially if multi-step pipeline).
+* P0: How to run it locally and how to use it in a pipeline
+* P1: Description of each step/container in the pipeline (example)
+* P1: High-level purpose of each step (e.g. preprocessing, training, serving)
+* P1: Static DAG (alpha: screenshot manually inserted by publisher)
+* P2: Input/Output & inner workings of each step
+* P2: Links to docker files and source used to create each container
+* P2: Links to code (Python, etc.) 
+If open source: Link to source code, location of container, type of registry, etc.
+If a download: Describe the artifact (file type, name, size)
+Most important is that how to use the pipeline or pipeline component is crystal clear. If there are multiple ways to use it (like locally and then deployed in the cloud), make sure each way has a separate, complete procedure describing how to use it (install/run/deploy/etc).
+For pipelines, make sure that the version of Kubeflow that was used to create the pipeline is stated.
+If the asset uses a particular algorithm, training approach, or other defining feature, make sure there’s a sentence or two about what it is and why it is being used (what’s the value compared to other approaches?).
+Any information about technologies or environment that is good to know but not key enough to go in the summary or intended use sections should go here. For example, whether or not a Tensorflow model uses eager execution.--->
+
+#### Sample
+
 
 Note: the sample code below works in both IPython notebook or python code directly.
 
-### Set sample parameters
+#### Set sample parameters
 
 
 ```python
@@ -37,7 +114,7 @@ EXPERIMENT_NAME = 'Bigquery -Query'
 COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/master/components/gcp/bigquery/query/component.yaml'
 ```
 
-### Install KFP SDK
+#### Install KFP SDK
 
 
 ```python
@@ -46,7 +123,7 @@ COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/maste
 # !pip3 install $KFP_PACKAGE --upgrade
 ```
 
-### Load component definitions
+#### Load component definitions
 
 
 ```python
@@ -56,7 +133,7 @@ bigquery_query_op = comp.load_component_from_url(COMPONENT_SPEC_URI)
 display(bigquery_query_op)
 ```
 
-### Here is an illustrative pipeline that uses the component
+#### Here is an illustrative pipeline that uses the component
 
 
 ```python
@@ -80,7 +157,7 @@ def pipeline(
         job_config).apply(gcp.use_gcp_secret('user-gcp-sa'))
 ```
 
-### Compile the pipeline
+#### Compile the pipeline
 
 
 ```python
@@ -90,7 +167,7 @@ import kfp.compiler as compiler
 compiler.Compiler().compile(pipeline_func, pipeline_filename)
 ```
 
-### Submit the pipeline for execution
+#### Submit the pipeline for execution
 
 
 ```python
@@ -110,3 +187,10 @@ experiment = client.create_experiment(EXPERIMENT_NAME)
 run_name = pipeline_func.__name__ + ' run'
 run_result = client.run_pipeline(experiment.id, run_name, pipeline_filename, arguments)
 ```
+
+
+### References
+
+<!--* P2: Links to papers
+* P2: Links to publisher website -->
+

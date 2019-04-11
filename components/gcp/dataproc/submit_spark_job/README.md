@@ -11,7 +11,7 @@ Name | Description | Type | Optional | Default
 project_id | The Google Cloud Platform (GCP) project ID that the cluster belongs to. | GCPProjectID | No |
 region | The Dataproc region that handles the request. | GCPRegion | No |
 cluster_name | The name of the cluster that runs the job. | String | No |
-main_jar_file_uri | The Hadoop Compatible Filesystem (HCFS) URI of the jar file that contains the main class. | GCSPath | No |
+main_jar_file_uri | The HCFS URI of the jar file that contains the main class. | GCSPath | No |
 main_class | The name of the driver's main class. The jar file that contains the class must be in the default CLASSPATH or specified in `spark_job.jarFileUris`. | String | No |
 args | The arguments to pass to the driver. Do not include arguments, such as --conf, that can be set as job properties, since a collision may occur that causes an incorrect job submission. | List | Yes | `[]`
 spark_job | The payload of a [SparkJob](https://cloud.google.com/dataproc/docs/reference/rest/v1/SparkJob). | Dict | Yes | `{}`

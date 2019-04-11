@@ -12,7 +12,7 @@ project_id | The Google Cloud Platform (GCP) project ID that the cluster belongs
 region | The Dataproc region that handles the request. | GCPRegion | No |
 cluster_name | The name of the cluster that runs the job. | String | No |
 queries | The queries to execute. You do not need to terminate a query with a semicolon. Multiple queries can be specified in one string by separating each with a semicolon.  | List | Yes | `[]`
-query_file_uri | The Hadoop Compatible Filesystem (HCFS) URI of the script that contains SQL queries.| GCSPath | Yes | ` `
+query_file_uri | The HCFS URI of the script that contains SQL queries.| GCSPath | Yes | ` `
 script_variables | Mapping of query variable names to values (equivalent to the Spark SQL command: SET name="value";). | List | Yes | `[]`
 sparksql_job | The payload of a [SparkSqlJob](https://cloud.google.com/dataproc/docs/reference/rest/v1/SparkSqlJob). | Dict | Yes | `{}`
 job | The payload of a [Dataproc job](https://cloud.google.com/dataproc/docs/reference/rest/v1/projects.regions.jobs). | Dict | Yes | `{}`

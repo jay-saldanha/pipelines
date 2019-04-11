@@ -11,7 +11,7 @@ Name | Description | Type | Optional | Default
 project_id | The Google Cloud Platform (GCP) project ID that the cluster belongs to. | GCPProjectID | No |
 region | The Dataproc region that handles the request. | GCPRegion | No |
 cluster_name | The name of the cluster that runs the job. | String | No |
-main_python_file_uri | The Hadoop Compatible Filesystem (HCFS) URI of the main Python file to use as the driver. Must be a .py file. | GCSPath | No |
+main_python_file_uri | The HCFS URI of the main Python file to use as the driver. Must be a .py file. | GCSPath | No |
 args | The arguments to pass to the driver. Do not include arguments, such as --conf, that can be set as job properties, since a collision may occur that causes an incorrect job submission. | List | Yes | `[]`
 pyspark_job | The payload of a [PySparkJob](https://cloud.google.com/dataproc/docs/reference/rest/v1/PySparkJob). | Dict | Yes | `{}`
 job | The payload of a [Dataproc job](https://cloud.google.com/dataproc/docs/reference/rest/v1/projects.regions.jobs). | Dict | Yes | `{}`

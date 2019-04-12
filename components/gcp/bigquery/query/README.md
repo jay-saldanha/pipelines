@@ -154,5 +154,5 @@ run_result = client.run_pipeline(experiment.id, run_name, pipeline_filename, arg
 *   [Sample notebook](https://github.com/kubeflow/pipelines/blob/master/components/gcp/bigquery/query/sample.ipynb)
 *   [Bigquery Query REST API](https://cloud.google.com/bigquery/docs/reference/rest/v2/jobs/query)
 
-## License
+## License 
 By deploying or using this software you agree to comply with the [AI Hub Terms of Service](https://aihub.cloud.google.com/u/0/aihub-tos) and the [Google APIs Terms of Service](https://developers.google.com/terms/). To the extent of a direct conflict of terms, the AI Hub Terms of Service will control.

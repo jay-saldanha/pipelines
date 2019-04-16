@@ -18,7 +18,7 @@ Use this component to submit a training job to Cloud ML Engine from a Kubeflow P
 | python_module | The name of the Python module to run after installing the training program. | Yes | String |  | None |
 | package_uris | The Cloud Storage location of the packages that contain the training program and any additional dependencies. The maximum number of package URIs is 100. | Yes | List |  | None |
 | region | The Compute Engine region in which the training job is run. | Yes | GCPRegion |  | us-central1 |
-| args | The command line arguments to pass to the training program. | Yes | List |  | None |
+| args | The command line arguments to pass to the training program. The arguments are defined in the training program. Use the JSON array format, for example: `[“--arg1”, “1”, “--arg2”, “str”]`. | Yes | List |  | None |
 | job_dir | A Cloud Storage path in which to store the training outputs and other data needed for training. This path is passed to your TensorFlow program as the `job-dir` command-line argument. The benefit of specifying this field is that Cloud ML validates the path for use in training. | Yes | GCSPath |  | None |
 | python_version | The version of Python used in training. If it is not set, the default version is 2.7. Python 3.5 is available when the runtime version is set to 1.4 and above. | Yes | String |  | None |
 | runtime_version | The runtime version of Cloud ML Engine to use for training. If it is not set, Cloud ML Engine uses the default. | Yes | String |  | 1 |

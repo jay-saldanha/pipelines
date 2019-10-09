@@ -1,49 +1,63 @@
 
 # Name
 
-Deploying a trained model to Cloud Machine Learning Engine 
+Component: Deploying a trained model to AI Platform
 
 
-# Label
+# Labels
 
-Cloud Storage, Cloud ML Engine, Kubeflow, Pipeline
+AI Platform, Kubeflow
 
 
 # Summary
 
-A Kubeflow Pipeline component to deploy a trained model from a Cloud Storage location to Cloud ML Engine.
+A Kubeflow pipeline component to deploy a trained model from a Cloud Storage location to AI Platform.
 
+# Facets
+<!--Make sure the asset has data for the following facets:
+Use case
+Technique
+Input data type
+ML workflow
+
+The data must map to the acceptable values for these facets, as documented on the “taxonomy” sheet of go/aihub-facets
+https://gitlab.aihub-content-external.com/aihubbot/kfp-components/commit/fe387ab46181b5d4c7425dcb8032cb43e70411c1
+--->
+Use case:
+
+Technique: 
+
+Input data type:
+
+ML workflow: 
 
 # Details
-
-
 ## Intended use
 
-Use the component to deploy a trained model to Cloud ML Engine. The deployed model can serve online or batch predictions in a Kubeflow Pipeline.
+Use the component to deploy a trained model to AI Platform. The deployed model can serve online or batch predictions in a Kubeflow Pipeline.
 
 
 ## Runtime arguments
 
 | Argument | Description | Optional | Data type | Accepted values | Default |
 |--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|--------------|-----------------|---------|
-| model_uri | The URI of a Cloud Storage directory that contains a trained model file.<br/> Or <br/> An [Estimator export base directory](https://www.tensorflow.org/guide/saved_model#perform_the_export) that contains a list of subdirectories named by timestamp. The directory with the latest timestamp is used to load the trained model file. | No | GCSPath |  |  |
-| project_id | The ID of the Google Cloud Platform (GCP) project of the serving model. | No | GCPProjectID |  |  |
+| model_uri | The URI of a Cloud Storage directory that contains a trained model file.<br/> or <br/> An [Estimator export base directory](https://www.tensorflow.org/guide/saved_model#perform_the_export) that contains a list of subdirectories that are timestamped. The directory with the latest timestamp is used to load the trained model file. | No | GCSPath | - | - |
+| project_id | The Google Cloud Platform (GCP) project ID of the serving model. | No | GCPProjectID | - |  -|
 | model_id | The name of the trained model. | Yes | String |  | None |
-| version_id | The name of the version of the model. If it is not provided, the operation uses a random name. | Yes | String |  | None |
-| runtime_version | The Cloud ML Engine runtime version to use for this deployment. If it is not provided, the default stable version, 1.0, is used. | Yes | String |  | None |
-| python_version | The version of Python used in the prediction. If it is not provided, version 2.7 is used. You can use Python 3.5 if runtime_version is set to 1.4 or above. Python 2.7 works with all supported runtime versions. | Yes | String |  | 2.7 |
-| model | The JSON payload of the new [model](https://cloud.google.com/ml-engine/reference/rest/v1/projects.models). | Yes | Dict |  | None |
-| version | The new [version](https://cloud.google.com/ml-engine/reference/rest/v1/projects.models.versions) of the trained model. | Yes | Dict |  | None |
-| replace_existing_version | Indicates whether to replace the existing version in case of a conflict (if the same version number is found.) | Yes | Boolean |  | FALSE |
-| set_default | Indicates whether to set the new version as the default version in the model. | Yes | Boolean |  | FALSE |
-| wait_interval | The number of seconds to wait in case the operation has a long run time. | Yes | Integer |  | 30 |
+| version_id | The name of the version of the model. If it is not provided, the operation uses a random name. | Yes | String | - | None |
+| runtime_version | The AI Platform runtime version to use for this deployment. If it is not provided, the default stable version, 1.0, is used. | Yes | String | - | None |
+| python_version | The version of Python used in the prediction. If it is not provided, version 2.7 is used. You can use Python 3.5 if `runtime_version` is set to 1.4 or above. Python 2.7 works with all supported runtime versions. | Yes | String |-  | 2.7 |
+| model | The JSON payload of the new [model](https://cloud.google.com/ml-engine/reference/rest/v1/projects.models). | Yes | Dict |-  | None |
+| version | The new [version](https://cloud.google.com/ml-engine/reference/rest/v1/projects.models.versions) of the trained model. | Yes | Dict | - | None |
+| replace_existing_version | Indicates whether to replace the existing version in case of a conflict (if the same version number is found.) | Yes | Boolean | - | False |
+| set_default | Indicates whether to set the new version as the default version in the model. | Yes | Boolean |-  | False |
+| wait_interval | The number of seconds to wait in case the operation has a long runtime. | Yes | Integer | - | 30 |
 
 
 
 ## Input data schema
 
-The component looks for a trained model in the location specified by the  `model_uri` runtime argument. The accepted trained models are:
-
+The component looks for a trained model in the location specified by the runtime argument, `model_uri`. The accepted trained models are:
 
 *   [Tensorflow SavedModel](https://cloud.google.com/ml-engine/docs/tensorflow/exporting-for-prediction) 
 *   [Scikit-learn & XGBoost model](https://cloud.google.com/ml-engine/docs/scikit/exporting-for-prediction)
@@ -56,13 +70,11 @@ The accepted file formats are:
 *   model.joblib
 *   model.pkl
 
-`model_uri` can also be an [Estimator export base directory, ](https://www.tensorflow.org/guide/saved_model#perform_the_export)which contains a list of subdirectories named by timestamp. The directory with the latest timestamp is used to load the trained model file.
-
 ## Output
 | Name    | Description                 | Type      |
 |:------- |:----                        | :---      |
 | job_id  | The ID of the created job.  |  String   |
-| job_dir | The Cloud Storage path that contains the trained model output files. |  GCSPath  |
+| job_dir | The Cloud Storage path that contains the output files of the trained model. |  GCSPath  |
 
 
 ## Cautions & requirements
@@ -91,48 +103,41 @@ Use the component to:
 
 Follow these steps to use the component in a pipeline:
 
-1.  Install the Kubeflow Pipeline SDK:
+1.  Install the Kubeflow pipeline's SDK:
 
+    ```python
+    %%capture --no-stderr
 
+    KFP_PACKAGE = 'https://storage.googleapis.com/ml-pipeline/release/0.1.14/kfp.tar.gz'
+    !pip3 install $KFP_PACKAGE --upgrade
+    ```
 
+2. Load the component using the Kubeflow pipeline's SDK:
 
-```python
-%%capture --no-stderr
+    ```python
+    import kfp.components as comp
 
-KFP_PACKAGE = 'https://storage.googleapis.com/ml-pipeline/release/0.1.14/kfp.tar.gz'
-!pip3 install $KFP_PACKAGE --upgrade
-```
-
-2. Load the component using KFP SDK
-
-
-```python
-import kfp.components as comp
-
-mlengine_deploy_op = comp.load_component_from_url(
-    'https://raw.githubusercontent.com/kubeflow/pipelines/e598176c02f45371336ccaa819409e8ec83743df/components/gcp/ml_engine/deploy/component.yaml')
-help(mlengine_deploy_op)
-```
+    mlengine_deploy_op = comp.load_component_from_url('https://raw.githubusercontent.com/kubeflow/pipelines/e598176c02f45371336ccaa819409e8ec83743df/components/gcp/ml_engine/deploy/component.yaml')
+    help(mlengine_deploy_op)
+    ```
 
 ### Sample
-Note: The following sample code works in IPython notebook or directly in Python code.
+The following sample code works in IPython notebook or directly in Python code.
 
-In this sample, you deploy a pre-built trained model from `gs://ml-pipeline-playground/samples/ml_engine/census/trained_model/` to Cloud ML Engine. The deployed model is `kfp_sample_model`. A new version is created every time the sample is run, and the latest version is set as the default version of the deployed model.
+In this sample, you deploy a pre-built trained model from `gs://ml-pipeline-playground/samples/ml_engine/census/trained_model/` to AI Platform. The deployed model is `kfp_sample_model`. A new version is created every time the sample is run, and the latest version is set as the default version of the deployed model.
 
 #### Set sample parameters
 
-
 ```python
-# Required Parameters
-PROJECT_ID = '<Please put your project ID here>'
+# Required parameters
+PROJECT_ID = '<Put your project ID here>'
 
-# Optional Parameters
+# Optional parameters
 EXPERIMENT_NAME = 'CLOUDML - Deploy'
 TRAINED_MODEL_PATH = 'gs://ml-pipeline-playground/samples/ml_engine/census/trained_model/'
 ```
 
 #### Example pipeline that uses the component
-
 
 ```python
 import kfp.dsl as dsl
@@ -168,7 +173,6 @@ def pipeline(
 
 #### Compile the pipeline
 
-
 ```python
 pipeline_func = pipeline
 pipeline_filename = pipeline_func.__name__ + '.zip'
@@ -180,10 +184,10 @@ compiler.Compiler().compile(pipeline_func, pipeline_filename)
 
 
 ```python
-#Specify pipeline argument values
+#Specify values for the pipeline's arguments
 arguments = {}
 
-#Get or create an experiment and submit a pipeline run
+#Get or create an experiment
 import kfp
 client = kfp.Client()
 experiment = client.create_experiment(EXPERIMENT_NAME)
@@ -194,11 +198,11 @@ run_result = client.run_pipeline(experiment.id, run_name, pipeline_filename, arg
 ```
 
 ## References
-* [Component python code](https://github.com/kubeflow/pipelines/blob/master/components/gcp/container/component_sdk/python/kfp_component/google/ml_engine/_deploy.py)
-* [Component docker file](https://github.com/kubeflow/pipelines/blob/master/components/gcp/container/Dockerfile)
+* [Component Python code](https://github.com/kubeflow/pipelines/blob/master/components/gcp/container/component_sdk/python/kfp_component/google/ml_engine/_deploy.py)
+* [Component Docker file](https://github.com/kubeflow/pipelines/blob/master/components/gcp/container/Dockerfile)
 * [Sample notebook](https://github.com/kubeflow/pipelines/blob/master/components/gcp/ml_engine/deploy/sample.ipynb)
-* [Cloud Machine Learning Engine Model REST API](https://cloud.google.com/ml-engine/reference/rest/v1/projects.models)
-* [Cloud Machine Learning Engine Version REST API](https://cloud.google.com/ml-engine/reference/rest/v1/projects.versions)
+* [AI Platform REST API - Resource: Model](https://cloud.google.com/ml-engine/reference/rest/v1/projects.models)
+* [AI Platform Version REST API - Resource: Version](https://cloud.google.com/ml-engine/reference/rest/v1/projects.models.versions) <!--the previous link was giving a 404, looks lie this is the correct link, please confirm-->
 
 ## License
 By deploying or using this software you agree to comply with the [AI Hub Terms of Service](https://aihub.cloud.google.com/u/0/aihub-tos) and the [Google APIs Terms of Service](https://developers.google.com/terms/). To the extent of a direct conflict of terms, the AI Hub Terms of Service will control.

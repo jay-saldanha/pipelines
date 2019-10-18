@@ -2,22 +2,37 @@
 
 # Name
 
-Gather training data by querying BigQuery 
+Component: Gather training data by querying BigQuery 
 
 
 # Labels
 
-GCP, BigQuery, Kubeflow, Pipeline
+BigQuery, Kubeflow
 
 
 # Summary
 
-A Kubeflow Pipeline component to submit a query to BigQuery and store the result in a Cloud Storage bucket.
+A Kubeflow pipeline component to submit a query to BigQuery and store the result in a Cloud Storage bucket.
 
+# Facets
+<!--Make sure the asset has data for the following facets:
+Use case
+Technique
+Input data type
+ML workflow
+
+The data must map to the acceptable values for these facets, as documented on the “taxonomy” sheet of go/aihub-facets
+https://gitlab.aihub-content-external.com/aihubbot/kfp-components/commit/fe387ab46181b5d4c7425dcb8032cb43e70411c1
+--->
+Use case:
+
+Technique: 
+
+Input data type:
+
+ML workflow: 
 
 # Details
-
-
 ## Intended use
 
 Use this Kubeflow component to:
@@ -25,28 +40,27 @@ Use this Kubeflow component to:
 *   Output the training data into a Cloud Storage bucket as CSV files.
 
 
-## Runtime arguments:
+## Runtime arguments
 
 
 | Argument | Description | Optional | Data type | Accepted values | Default |
-|----------|-------------|----------|-----------|-----------------|---------|
-| query | The query used by BigQuery to fetch the results. | No | String |  |  |
-| project_id | The project ID of the Google Cloud Platform (GCP) project to use to execute the query. | No | GCPProjectID |  |  |
-| dataset_id | The ID of the persistent BigQuery dataset to store the results of the query. If the dataset does not exist, the operation will create a new one. | Yes | String |  | None |
-| table_id | The ID of the BigQuery table to store the results of the query. If the table ID is absent, the operation will generate a random ID for the table. | Yes | String |  | None |
-| output_gcs_path | The path to the Cloud Storage bucket to store the query output. | Yes | GCSPath |  | None |
-| dataset_location | The location where the dataset is created. Defaults to US. | Yes | String |  | US |
-| job_config | The full configuration specification for the query job. See [QueryJobConfig](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.QueryJobConfig.html#google.cloud.bigquery.job.QueryJobConfig) for details. | Yes | Dict | A JSONobject which has the same structure as [QueryJobConfig](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.QueryJobConfig.html#google.cloud.bigquery.job.QueryJobConfig) | None |
-## Input data schema
+|:---------|:------------|:---------|:----------|:----------------|:--------|
+| query | The query used by BigQuery to fetch the results. | No | String | - | - |
+| project_id | The project ID of the Google Cloud Platform (GCP) project to use to execute the query. | No | GCPProjectID | - | - |
+| dataset_id | The ID of the persistent BigQuery dataset to store the results of the query. If the dataset does not exist, the operation will create a new one. | Yes | String |  -| None |
+| table_id | The ID of the BigQuery table to store the results of the query. If the table ID is absent, the operation will generate a random ID for the table. | Yes | String |  -| None |
+| output_gcs_path | The path to the Cloud Storage bucket to store the query output. | Yes | GCSPath |- | None |
+| dataset_location | The location where the dataset is created. Defaults to US. | Yes | String |  -| US |
+| job_config | The full configuration specification for the query job. The accepted value is a JSON object which has the same structure as [QueryJobConfig](https://googleapis.github.io/google-cloud-python/latest/bigquery/generated/google.cloud.bigquery.job.QueryJobConfig.html#google.cloud.bigquery.job.QueryJobConfig). | Yes | Dict | JSON object | None |
 
-The input data is a BigQuery job containing a query that pulls data f rom various sources. 
+## Input data schema
+The input data is a BigQuery job containing a query that pulls data from various sources. 
 
 
 ## Output:
-
 Name | Description
 :--- | :----------
-output_gcs_path | The path to the Cloud Storage bucket containing the query output in CSV format.
+output_gcs_path | The path to the Cloud Storage bucket containing the query's output in the CSV format.
 
 ## Cautions & requirements
 
@@ -59,32 +73,32 @@ To use the component, the following requirements must be met:
     bigquery_query_op(...).apply(gcp.use_gcp_secret('user-gcp-sa'))
     ```
 *   The Kubeflow user service account is a member of the `roles/bigquery.admin` role of the project.
-*   The Kubeflow user service account is a member of the `roles/storage.objectCreator `role of the Cloud Storage output bucket.
+*   The Kubeflow user service account is a member of the `roles/storage.objectCreator` role of the Cloud Storage output bucket.
 
 ## Detailed description
 This Kubeflow Pipeline component is used to:
 *   Submit a query to BigQuery.
-    *   The query results are persisted in a dataset table in BigQuery.
+    *   The query results are found in a tabular dataset in BigQuery.
     *   An extract job is created in BigQuery to extract the data from the dataset table and output it to a Cloud Storage bucket as CSV files.
 
-    Use the code below as an example of how to run your BigQuery job.
+Use the code below as an example of how to run your BigQuery job.
 
 ### Sample
 
-Note: The following sample code works in an IPython notebook or directly in Python code.
+The following sample code works in an IPython notebook or directly in Python code.
 
 #### Set sample parameters
 ```python
-# Required Parameters
+# Required parameters
 PROJECT_ID = '<Put your project ID here>'
 GCS_WORKING_DIR = 'gs://<Put your GCS path here>' # No ending slash
 
-# Optional Parameters
+# Optional parameters
 EXPERIMENT_NAME = 'Bigquery -Query'
 COMPONENT_SPEC_URI = 'https://raw.githubusercontent.com/kubeflow/pipelines/master/components/gcp/bigquery/query/component.yaml'
 ```
 
-#### Install Kubeflow Pipeline SDK
+#### Install the Kubeflow pipeline's SDK
 ```python
 # Install the SDK (Uncomment the code if the SDK is not installed before)
 # KFP_PACKAGE = 'https://storage.googleapis.com/ml-pipeline/release/0.1.11/kfp.tar.gz'
@@ -132,14 +146,14 @@ compiler.Compiler().compile(pipeline_func, pipeline_filename)
 #### Submit the pipeline for execution
 
 ```python
-#Specify pipeline argument values
+#Specify values for the pipeline's arguments
 arguments = {
     'query': 'SELECT * FROM `bigquery-public-data.stackoverflow.posts_questions` LIMIT 10',
     'project_id': PROJECT_ID,
     'output_gcs_path': '{}/bigquery/query/questions.csv'.format(GCS_WORKING_DIR)
 }
 
-#Get or create an experiment and submit a pipeline run
+#Get or create an experiment 
 import kfp
 client = kfp.Client()
 experiment = client.create_experiment(EXPERIMENT_NAME)
